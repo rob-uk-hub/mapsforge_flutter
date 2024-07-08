@@ -44,6 +44,9 @@ class RenderinstructionPathtext extends RenderInstruction {
     base.repeatStart = REPEAT_START_DEFAULT * displayModel.getFontScaleFactor();
     base.setStrokeMinZoomLevel(DisplayModel.STROKE_MIN_ZOOMLEVEL_TEXT);
 
+    // Set default color since some styles do not define a fill color.
+    base.setFillColorFromNumber(XmlUtils.getColor("#000000", this));
+
     rootElement.attributes.forEach((element) {
       String name = element.name.toString();
       String value = element.value;

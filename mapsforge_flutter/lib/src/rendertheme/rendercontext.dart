@@ -165,6 +165,11 @@ class LayerPaintContainer {
 
   void add(int level, RenderInfo element) {
     //_log.info("Adding level $level to layer with ${drawingLayers.length} levels");
+    // Sometimes the number of levels is incorrect, this adds them back in
+    while (this.ways.length <= level) {
+      ways.add([]);
+    }
+
     this.ways[level].add(element);
   }
 

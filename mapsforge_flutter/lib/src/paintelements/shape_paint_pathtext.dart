@@ -30,9 +30,14 @@ class ShapePaintPathtext extends ShapePaint<ShapePathtext> {
   ShapePaintPathtext(
       ShapePathtext shapePathtext, this.caption, LineString stringPath)
       : super(shapePathtext) {
-    if (!shapePathtext.isFillTransparent())
+    if (shapePathtext.isFillTransparent()) {
+      // The 'late' paintFront variable must be initialised.
+      paintFront = null;
+    } else {
       paintFront =
           createPaint(style: Style.FILL, color: shapePathtext.fillColor);
+    }
+
     if (!shapePathtext.isStrokeTransparent())
       paintBack = createPaint(
           style: Style.STROKE,

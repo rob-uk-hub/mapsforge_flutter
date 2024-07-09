@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/services.dart';
@@ -49,9 +50,16 @@ class RenderThemeBuilder {
   /// Builds and returns a rendertheme by loading a rendertheme-file. This
   /// is a convienience-function. If desired we can also implement some caching
   /// so that we do not need to parse the same file over and over again.
-  static Future<RenderTheme> create(
-      DisplayModel displayModel, String filename) async {
-    ByteData bytes = await rootBundle.load(filename);
+  static Future<RenderTheme> create(DisplayModel displayModel, String filename,
+      {bool loadFromBundle = true}) async {
+    ByteData bytes;
+    if (loadFromBundle) {
+      bytes = await rootBundle.load(filename);
+    } else {
+      bytes = await File(filename)
+          .readAsBytes()
+          .then((b) => ByteData.view(b.buffer));
+    }
     String content = const Utf8Decoder().convert(bytes.buffer.asUint8List());
     RenderThemeBuilder renderThemeBuilder = RenderThemeBuilder();
     renderThemeBuilder.parseXml(displayModel, content);
@@ -211,8 +219,9 @@ class RenderThemeBuilder {
                 }
               });
 
-              RenderinstructionHillshading hillshading = RenderinstructionHillshading(
-                  minZoom, maxZoom, magnitude, layer, always, _level);
+              RenderinstructionHillshading hillshading =
+                  RenderinstructionHillshading(
+                      minZoom, maxZoom, magnitude, layer, always, _level);
 
 //      if (this.categories == null || category == null || this.categories.contains(category)) {
               //hillShadings.add(hillshading);
